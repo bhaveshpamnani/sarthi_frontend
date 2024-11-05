@@ -19,7 +19,7 @@ const wishlistSchema = new mongoose.Schema({
       },
       isInWishlist: { 
         type: Boolean, 
-        default: true  // Toggle field to mark if the product is actively in the wishlist
+        default: false  // Toggle field to mark if the product is actively in the wishlist
       }
     }
   ]
