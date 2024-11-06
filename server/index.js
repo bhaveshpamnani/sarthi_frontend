@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const productRoutes = require("./routes/productRoutes");
 const userRoutes = require("./routes/userRoutes");
 const wishlistRoutes = require("./routes/wishlistRoutes");
+const reviewRoutes = require("./routes/reviewRoutes");
 
 const app = express();
 const PORT = 3000;
@@ -23,6 +24,7 @@ mongoose
 app.use("/api/products", productRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/wishlist",wishlistRoutes);
+app.use("/api/reviews", reviewRoutes);
 
 // Start the server
 app.listen(PORT, () => {
