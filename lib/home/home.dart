@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:newsarthi/product/popular_products.dart';
 import 'package:newsarthi/home/promo_slider.dart';
+import 'package:newsarthi/product/product_details/product_detail.dart';
 
 import '../../../../common/widgets/custom_shapes/container/search_container.dart';
 import '../../../../common/widgets/layouts/grid_layout.dart';
@@ -102,7 +103,16 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   SGridLayout(
                     itemCount: 4,
-                    itemBuilder: (BuildContext, int) => const SProductCardVertical(),
+                    itemBuilder: (BuildContext context, int index) => GestureDetector(
+                      onTap: () {
+                        print("Navigating to ProductDetail");
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const ProductDetail()),
+                        );
+                      },
+                      child: SProductCardVertical(),
+                    ),
                   ),
                 ],
               ),
