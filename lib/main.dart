@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:newsarthi/authentication/screens/onborading/onboarding_screen.dart';
 import 'package:newsarthi/utils/theme/theme.dart';
+
+import 'authentication/screens/AuthCheck/check_auth.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
       themeMode: ThemeMode.system,
       theme: SAppTheme.lightTheme,
       darkTheme: SAppTheme.darkTheme,
-      home: const OnBoardingScreen(),
+      home: CheckAuthScreen(),
     );
   }
 }

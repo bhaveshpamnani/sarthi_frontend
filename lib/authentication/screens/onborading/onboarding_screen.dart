@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:newsarthi/utils/constants/image_strings.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../../utils/constants/colors.dart';
@@ -46,7 +47,9 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     _pageController.jumpToPage(index);
   }
 
-  void _nextPage(BuildContext context) {
+
+// Navigate to LoginScreen after onboarding and set a flag in SharedPreferences
+  void _nextPage(BuildContext context) async {
     if (_currentPageIndex < 2) {
       int nextPageIndex = _currentPageIndex + 1;
       _pageController.animateToPage(
@@ -56,17 +59,15 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
       );
       _updatePageIndicator(nextPageIndex);
     } else {
-      // Replace with actual navigation logic
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('onboardingComplete', true); // Set onboarding as complete
       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => const LoginScreen()));
     }
   }
 
-  void _skipPage(BuildContext context) {
-    if (_pageController.hasClients) {
-      _pageController.jumpToPage(2);
-      _updatePageIndicator(2);
-    }
-    // Replace with actual navigation logic
+  void _skipPage(BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('onboardingComplete', true); // Set onboarding as complete
     Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => const LoginScreen()));
   }
 

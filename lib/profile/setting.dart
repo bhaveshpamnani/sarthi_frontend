@@ -13,17 +13,24 @@ import '../common/widgets/text/section_heading.dart';
 import '../utils/constants/colors.dart';
 import '../utils/constants/sizes.dart';
 
-class SettingScreen extends StatelessWidget {
+class SettingScreen extends StatefulWidget {
   const SettingScreen({super.key});
 
-  Future<void> _logout(BuildContext context) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.clear();
+  @override
+  State<SettingScreen> createState() => _SettingScreenState();
+}
 
-    // Navigate back to the root of the app and then push the login screen
-    Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => const LoginScreen()),
-        (Route<dynamic> route) => false);
+class _SettingScreenState extends State<SettingScreen> {
+  Future<void> logout(BuildContext context) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('token'); // Remove token
+    await prefs.setBool('isLoggedIn', false);
+    await prefs.setBool('onboardingComplete', false);
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const LoginScreen()),
+    );
   }
 
   @override
@@ -122,7 +129,10 @@ class SettingScreen extends StatelessWidget {
                   SizedBox(
                     width: double.infinity,
                     child: OutlinedButton(
-                      onPressed: () => _logout(context),
+                      style: OutlinedButton.styleFrom(
+                        side: BorderSide(color: Colors.red), // Change this to your preferred color
+                      ),
+                      onPressed: () => logout(context),
                       child: const Text('Logout'),
                     ),
                   ),
