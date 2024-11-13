@@ -7,10 +7,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../authentication/screens/SignIn/login.dart';
 import '../common/widgets/appbar/appbar.dart';
 import '../common/widgets/custom_shapes/container/primary_header_container.dart';
+import '../common/widgets/image/circular_image.dart';
 import '../common/widgets/list_tile/setting_menu_tile.dart';
 import '../common/widgets/list_tile/user_profile_tile.dart';
 import '../common/widgets/text/section_heading.dart';
 import '../utils/constants/colors.dart';
+import '../utils/constants/image_strings.dart';
 import '../utils/constants/sizes.dart';
 
 class SettingScreen extends StatefulWidget {
@@ -52,14 +54,27 @@ class _SettingScreenState extends State<SettingScreen> {
                           .apply(color: SColors.white),
                     ),
                   ),
-
                   ///User Profile Card
-                  SUserProfileTile(
-                    onPressed: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const ProfileScreen(),
-                      ),
+                  ListTile(
+                    leading: const SCircularImage(
+                      image: SImages.user,
+                      width: 50,
+                      height: 50,
+                      padding: 0,
+                    ),
+                    title: Text(
+                      'Mukesh Pamnani',
+                      style: Theme.of(context)
+                          .textTheme
+                          .headlineMedium!
+                          .apply(color: SColors.white),
+                    ),
+                    subtitle: Text(
+                      'mukesh@gmail.com',
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium!
+                          .apply(color: SColors.white),
                     ),
                   ),
                   const SizedBox(
@@ -116,12 +131,7 @@ class _SettingScreenState extends State<SettingScreen> {
                     icon: Iconsax.discount_shape,
                     onTap: () {},
                   ),
-                  SSettingMenuTile(
-                    title: 'Notification',
-                    subTitle: 'Set any kind of notification message',
-                    icon: Iconsax.notification,
-                    onTap: () {},
-                  ),
+
                   ///--LogOut Button
                   const SizedBox(
                     height: SSizes.spaceBtwSections,
@@ -130,7 +140,9 @@ class _SettingScreenState extends State<SettingScreen> {
                     width: double.infinity,
                     child: OutlinedButton(
                       style: OutlinedButton.styleFrom(
-                        side: BorderSide(color: Colors.red), // Change this to your preferred color
+                        side: BorderSide(
+                            color: Colors
+                                .red), // Change this to your preferred color
                       ),
                       onPressed: () => logout(context),
                       child: const Text('Logout'),

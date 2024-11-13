@@ -86,3 +86,65 @@ exports.updateUserProfile = async(req,res)=>{
         res.status(500).json({message:"Internal Server Error : ",error});
     }
 }
+
+exports.addAddress = async (req, res) => {
+    try {
+        const userId = req.params.id;
+        const newAddress = req.body.addresses;
+        console.log(newAddress);
+
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        user.addresses.push(newAddress);
+        await user.save();
+
+        res.status(200).json({
+            message: "Address added successfully",
+            userId: user._id,
+            addresses: user.addresses
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Internal Server Error", error });
+    }
+};
+
+
+exports.updateAddress = async (req, res) => {
+    try {
+        const userId = req.params.id;
+        const { addressIndex, updatedAddress } = req.body;
+
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        // Validate address index
+        if (typeof addressIndex !== "number" || addressIndex < 0 || addressIndex >= user.addresses.length) {
+            return res.status(400).json({ message: "Invalid address index" });
+        }
+
+        // Update address fields
+        user.addresses[addressIndex] = {
+            ...user.addresses[addressIndex]._doc,  // Current address details
+            ...updatedAddress  // Only the fields provided in the update
+        };
+
+        await user.save();
+
+        res.status(200).json({
+            message: "Address updated successfully",
+            userId: user._id,
+            addresses: user.addresses
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Internal Server Error", error });
+    }
+};
+
+

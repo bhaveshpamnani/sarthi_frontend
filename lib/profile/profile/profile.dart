@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:newsarthi/profile/address/address.dart';
 import 'package:newsarthi/profile/profile/profile_menu.dart';
 
 import '../../common/widgets/appbar/appbar.dart';
@@ -7,6 +8,7 @@ import '../../common/widgets/text/section_heading.dart';
 import '../../utils/constants/colors.dart';
 import '../../utils/constants/image_strings.dart';
 import '../../utils/constants/sizes.dart';
+import '../address/single_address.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -58,12 +60,7 @@ class ProfileScreen extends StatelessWidget {
               const SizedBox(
                 height: SSizes.spaceBtwItems,
               ),
-              Center(
-                child: TextButton(
-                  onPressed: (){},
-                  child: const Text('Close Account',style: TextStyle(color: Colors.red),),
-                ),
-              )
+
             ],
           ),
         ),

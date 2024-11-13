@@ -1,31 +1,34 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
+const addressSchema = new mongoose.Schema({
+  building: { type: String, default: '' },
+  street: { type: String, default: '' },
+  landmark: { type: String, default: '' },
+  city: { type: String, default: '' },
+  state: { type: String, default: '' },
+  pinCode: { type: String, default: '' },
+  country: { type: String, default: '' },
+  isDefault: { type: Boolean, default: false }
+});
+
+const couponSchema = new mongoose.Schema({
+  code: { type: String, required: true },
+  discount: { type: Number, required: true },
+  expiryDate: { type: Date, required: true },
+  isRedeemed: { type: Boolean, default: false }
+});
+
 const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  email: { type: String, required: true, unique: true},
+  email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  phone: { type: String, required: true ,unique:true},
-  addresses: [{
-    building: String,
-    street: String,
-    landmark: String,
-    city: String,
-    state: String,
-    postalCode: String,
-    country: String,
-    isDefault: { type: Boolean, default: false }
-  }],
-  coupons: [{
-    code: { type: String, required: true },
-    discount: { type: Number, required: true },  // Discount amount or percentage
-    expiryDate: { type: Date, required: true },
-    isRedeemed: { type: Boolean, default: false }  // To track if the coupon has been used
-  }],
+  phone: { type: String, required: true, unique: true },
+  addresses: [addressSchema],
+  coupons: [couponSchema],
   orders: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Order' }],
-  wishlist: { type: mongoose.Schema.Types.ObjectId, ref: 'Wishlist' },  // Reference to the Wishlist schema
+  wishlist: { type: mongoose.Schema.Types.ObjectId, ref: 'Wishlist' }
 }, { timestamps: true });
-
 
 // Hash password before saving user
 userSchema.pre('save', async function(next) {

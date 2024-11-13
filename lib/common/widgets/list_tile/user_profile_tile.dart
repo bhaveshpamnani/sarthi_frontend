@@ -34,13 +34,6 @@ class SUserProfileTile extends StatelessWidget {
             .bodyMedium!
             .apply(color: SColors.white),
       ),
-      trailing: IconButton(
-        onPressed: onPressed,
-        icon: const Icon(
-          Iconsax.edit,
-          color: SColors.white,
-        ),
-      ),
     );
   }
 }
