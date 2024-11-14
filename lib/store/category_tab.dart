@@ -20,16 +20,7 @@ class SCategoryTab extends StatelessWidget {
           padding: const EdgeInsets.all(SSizes.defaultSpace),
           child: Column(
             children: [
-              ///--Brands
-              const SBrandShowCase(
-                images: [
-                  SImages.productImage3,
-                  SImages.productImage3,
-                  SImages.productImage3,
-                ],
-              ),
-              const SizedBox(height: SSizes.spaceBtwItems,),
-
+             
               ///--Products
               SSectionHeading(
                 title: 'You might like ',

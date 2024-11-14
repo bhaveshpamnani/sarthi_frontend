@@ -60,7 +60,7 @@ class SProductCardVertical extends StatelessWidget {
                   ),
                 ),
                 const Positioned(
-                  top: -7,
+                  top: 0,
                   right: 0,
                   child: SCircularIcon(
                     width: 40,
@@ -109,7 +109,7 @@ class SProductCardVertical extends StatelessWidget {
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(SSizes.cardRadiusMd - 5),
                     bottomRight:
-                        Radius.circular(SSizes.productImageRadius - 5),
+                    Radius.circular(SSizes.productImageRadius - 5),
                   ),
                 ),
                 child: const SizedBox(

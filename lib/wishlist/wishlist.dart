@@ -20,7 +20,7 @@ class WishList extends StatelessWidget {
           child: Column(
             children: [
               SAppBar(
-                showBackArrow: true,
+                showBackArrow: false,
                 title: Text(
                   "WishList",
                   style: Theme.of(context).textTheme.headlineMedium,

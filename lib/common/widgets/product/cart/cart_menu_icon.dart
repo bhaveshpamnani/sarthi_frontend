@@ -15,7 +15,6 @@ class SCartCounter extends StatelessWidget {
       children: [
         IconButton(
            onPressed: (){},
-          // => Get.to(() => CartScreen()),
           icon: const Icon(Iconsax.shopping_bag),
           color: iconColor,
         ),

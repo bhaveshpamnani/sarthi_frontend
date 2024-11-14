@@ -29,13 +29,31 @@ exports.createProduct = async (req, res) => {
   }
 };
 
-// Get All Products
+// Get All Products with populated category details
 exports.getAllProducts = async (req, res) => {
   try {
-    const products = await Product.find();
+    const products = await Product.find().populate('category');
     res.json(products);
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+};
+// Get products by category ID
+exports.getProductsByCategory = async (req, res) => {
+  try {
+    const categoryId = req.params.id;
+    console.log(categoryId);
+    
+    const products = await Product.find({ category: categoryId });
+
+    if (!products.length) {
+      return res.status(404).json({ message: "No products found for this category" });
+    }
+
+    res.status(200).json({ products });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Internal Server Error", error });
   }
 };
 

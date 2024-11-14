@@ -1,13 +1,14 @@
-const mongoose = require("mongoose");
+// models/product.js
+const mongoose = require('mongoose');
 
 const productSchema = new mongoose.Schema(
   {
     name: { type: String, required: true, trim: true, maxlength: 100 },
     description: { type: String, required: true, maxlength: 2000 },
     category: { 
-      type: String, 
-      required: true, 
-      enum: ["Kurti", "Dress Material", "Saree", "Lehenga", "Top"]  // Enum for allowed categories
+      type: mongoose.Schema.Types.ObjectId, 
+      ref: 'Category',  // Reference to Category model
+      required: true 
     },
     brand: { type: String, trim: true },
     price: { type: Number, required: true, min: 0 },
@@ -26,10 +27,10 @@ const productSchema = new mongoose.Schema(
       default: "Cotton",
     },
     productReturnDay: {
-        type: Number,
-        required: true,
-        default: 2,
-      },
+      type: Number,
+      required: true,
+      default: 2,
+    },
     isFeatured: { type: Boolean, default: false },
     isAvailable: { type: Boolean, default: true },
     createdAt: { type: Date, default: Date.now },
@@ -42,4 +43,4 @@ const productSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Product", productSchema);
+module.exports = mongoose.model('Product', productSchema);

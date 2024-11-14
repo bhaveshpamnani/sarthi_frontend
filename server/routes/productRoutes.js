@@ -14,6 +14,9 @@ router.get("/:id", productController.getProductById);
 // Update Product
 router.put("/:id", productController.updateProduct);
 
+//Category wise Product
+router.get('/categoryProduct/:id',productController.getProductsByCategory);
+
 // Delete Product
 router.delete("/:id", productController.deleteProduct);
 
