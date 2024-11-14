@@ -25,6 +25,7 @@ class SCategoryTab extends StatelessWidget {
               SSectionHeading(
                 title: 'You might like ',
                 onPressed: () {},
+                  showActionButton:false,
               ),
               const SizedBox(
                 height: SSizes.spaceBtwItems,

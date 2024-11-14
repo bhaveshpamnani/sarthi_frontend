@@ -39,7 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void _loginUser() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('isLoggedIn', true);
-    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => const NavigationMenu()));
+    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => const Navigation()));
   }
 
   void signInUser() {

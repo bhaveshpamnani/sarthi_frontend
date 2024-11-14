@@ -88,6 +88,26 @@ class SProductMetaData extends StatelessWidget {
           height: SSizes.spaceBtwItems,
         ),
 
+        ///Fabric
+        Row(
+          children: [
+            Text(
+              'Fabric :',
+              style: Theme.of(context).textTheme.labelLarge,
+            ),
+            SizedBox(
+              width: SSizes.spaceBtwItems,
+            ),
+            Text(
+              'Silk',
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+          ],
+        ),
+        SizedBox(
+          height: SSizes.spaceBtwItems,
+        ),
+
         ///Brand
         Row(
           children: [

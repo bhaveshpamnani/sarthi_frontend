@@ -32,7 +32,16 @@ class SSectionHeading extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
         ),
         if (showActionButton)
-          TextButton(onPressed: onPressed, child: Text(buttonTitle,style: Theme.of(context).textTheme.bodyMedium!.apply(color: SColors.primaryColor),)),
+          TextButton(
+            onPressed: onPressed,
+            child: Text(
+              buttonTitle,
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium!
+                  .apply(color: SColors.primaryColor),
+            ),
+          ),
       ],
     );
   }

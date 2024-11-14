@@ -13,47 +13,52 @@ class ProductReviewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      ///--Appbar
-      appBar: SAppBar(
-        title: Text('Reviews & Ratings'),
-        showBackArrow: true,
-      ),
+    return Container(
+      color: Colors.black38,
+      child: SafeArea(
+        child: Scaffold(
+          ///--Appbar
+          appBar: SAppBar(
+            title: Text('Reviews & Ratings'),
+            showBackArrow: true,
+          ),
 
-      ///--body
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.all(SSizes.defaultSpace),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                  'Ratings and Reviews are verified and are from people who use the same type of product that you use'),
-              SizedBox(
-                height: SSizes.spaceBtwItems,
+          ///--body
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.all(SSizes.defaultSpace),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                      'Ratings and Reviews are verified and are from people who use the same type of product that you use'),
+                  SizedBox(
+                    height: SSizes.spaceBtwItems,
+                  ),
+
+                  ///Overall Product Rating
+
+                  SOverAllProductRating(),
+                  SRatingBarIndicator(
+                    rating: 4,
+                  ),
+
+                  Text(
+                    '12,611',
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                  SizedBox(
+                    height: SSizes.spaceBtwSections,
+                  ),
+
+                  ///User Review List
+                  UserReviewCard(),
+                  UserReviewCard(),
+                  UserReviewCard(),
+                  UserReviewCard(),
+                ],
               ),
-
-              ///Overall Product Rating
-
-              SOverAllProductRating(),
-              SRatingBarIndicator(
-                rating: 4,
-              ),
-
-              Text(
-                '12,611',
-                style: Theme.of(context).textTheme.bodySmall,
-              ),
-              SizedBox(
-                height: SSizes.spaceBtwSections,
-              ),
-
-              ///User Review List
-              UserReviewCard(),
-              UserReviewCard(),
-              UserReviewCard(),
-              UserReviewCard(),
-            ],
+            ),
           ),
         ),
       ),

@@ -11,7 +11,9 @@ const productSchema = new mongoose.Schema(
       required: true 
     },
     brand: { type: String, trim: true },
-    price: { type: Number, required: true, min: 0 },
+    discountPrice: { type: Number, required: true, min: 0 },
+    mrpPrice: { type: Number, required: true, min: 0 },
+    discount: { type: Number, required: true, min: 0 },
     stock: { type: Number, required: true, min: 0 },
     sku: { type: String, unique: true, required: true },
     images: [{ url: { type: String, required: true }, altText: String }],

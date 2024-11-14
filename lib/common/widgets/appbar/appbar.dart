@@ -26,6 +26,7 @@ class SAppBar extends StatelessWidget implements PreferredSizeWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: SSizes.sm),
       child: AppBar(
+
         automaticallyImplyLeading: false,
         leading: showBackArrow
             ? IconButton(

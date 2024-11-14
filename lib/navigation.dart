@@ -1,21 +1,21 @@
+import 'package:flashy_tab_bar2/flashy_tab_bar2.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:newsarthi/home/home.dart';
 import 'package:newsarthi/profile/setting.dart';
 import 'package:newsarthi/store/store.dart';
-import 'package:newsarthi/utils/constants/colors.dart';
-import 'package:newsarthi/utils/helpers/helper_functions.dart';
 import 'package:newsarthi/wishlist/wishlist.dart';
+import 'package:flutter/cupertino.dart';
 
-// Main screen with navigation menu
-class NavigationMenu extends StatefulWidget {
-  const NavigationMenu({super.key});
+
+class Navigation extends StatefulWidget {
+  const Navigation({super.key});
 
   @override
-  State<NavigationMenu> createState() => _NavigationMenuState();
+  State<Navigation> createState() => _Navigation();
 }
 
-class _NavigationMenuState extends State<NavigationMenu> {
+class _Navigation extends State<Navigation> {
   int _selectedIndex = 0;
 
   final List<Widget> _screens = [
@@ -24,32 +24,44 @@ class _NavigationMenuState extends State<NavigationMenu> {
     const WishList(),
     const SettingScreen(),
   ];
-
   @override
   Widget build(BuildContext context) {
-    final dark = SHelperFuctions.isDarkMode(context);
-
     return Scaffold(
-      bottomNavigationBar: NavigationBar(
-        height: 80,
-        elevation: 0,
+      body: _screens[_selectedIndex],
+      bottomNavigationBar: FlashyTabBar(
+        animationCurve: Curves.linear,
+        animationDuration: Duration(milliseconds: 500),
         selectedIndex: _selectedIndex,
-        onDestinationSelected: (index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-        },
-        backgroundColor: dark ? SColors.black : Colors.white,
-        indicatorColor: dark ? SColors.white.withOpacity(0.2) : SColors.black.withOpacity(0.1),
-        destinations: const [
-          NavigationDestination(icon: Icon(Iconsax.home), label: 'Home'),
-          NavigationDestination(icon: Icon(Iconsax.shop), label: 'Store'),
-          NavigationDestination(icon: Icon(Iconsax.heart), label: 'WishList'),
-          NavigationDestination(icon: Icon(Iconsax.user), label: 'Profile'),
+        iconSize: 23,
+        showElevation: false, // use this to remove appBar's elevation
+        onItemSelected: (index) => setState(() {
+          _selectedIndex = index;
+        }),
+        items: [
+          FlashyTabBarItem(
+            icon: Image.asset(
+              "assets/icons/navigation/home.png",
+              color: Color(0xff9496c1),
+              width: 30,
+            ),
+            title: Text('Home'),
+          ),
+          FlashyTabBarItem(
+            icon: Icon(Iconsax.category),
+            title: Text('Category'),
+          ),
+          FlashyTabBarItem(
+            icon: Icon(Iconsax.like_1),
+            title: Text('WishList'),
+          ),
+          FlashyTabBarItem(
+            icon: Icon(CupertinoIcons.profile_circled),
+            title: Text('Profile'),
+          ),
         ],
       ),
-      body: _screens[_selectedIndex],
     );
   }
 }
+
 

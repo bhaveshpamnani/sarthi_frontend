@@ -43,6 +43,7 @@ dependencies:
   get:
   get_storage:
   shared_preferences:
+  flashy_tab_bar2: ^0.0.10
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -82,6 +83,7 @@ flutter:
     - assets/images/products/
     - assets/images/user/
     - assets/icons/payment_method/
+    - assets/icons/navigation/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

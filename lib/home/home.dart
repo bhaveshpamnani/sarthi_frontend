@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:newsarthi/product/popular_products.dart';
 import 'package:newsarthi/home/promo_slider.dart';
 import 'package:newsarthi/product/product_details/product_detail.dart';
@@ -24,103 +25,109 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const SPrimaryHeaderContainer(
-              child: Column(
-                children: [
-                  ///AppBar
-                  SHomeAppBar(),
-                  SizedBox(
-                    height: SSizes.spaceBtwItems,
-                  ),
-
-                  ///Searchbar
-                  SSearchContainer(
-                    text: 'Search in Store',
-                  ),
-                  SizedBox(
-                    height: SSizes.spaceBtwSections,
-                  ),
-
-                  ///Categories
-                  Padding(
-                    padding: EdgeInsets.only(
-                      left: SSizes.defaultSpace,
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle(
+        statusBarColor: Colors.blue, // Set the exact color you want here
+        statusBarIconBrightness: Brightness.light, // Adjust icon brightness as needed
+      ),
+      child: Scaffold(
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              const SPrimaryHeaderContainer(
+                child: Column(
+                  children: [
+                    ///AppBar
+                    SHomeAppBar(),
+                    SizedBox(
+                      height: SSizes.spaceBtwItems,
                     ),
-                    child: Column(
-                      children: [
-                        SSectionHeading(
-                          title: 'Popular Categories',
-                          showActionButton: false,
-                          textColor: SColors.white,
-                        ),
-                        SizedBox(
-                          height: SSizes.spaceBtwItems,
-                        ),
-                        SHomeCategories(),
-                        SizedBox(
-                          height: SSizes.spaceBtwSections,
-                        ),
+        
+                    ///Searchbar
+                    SSearchContainer(
+                      text: 'Search in Store',
+                    ),
+                    SizedBox(
+                      height: SSizes.spaceBtwSections,
+                    ),
+        
+                    ///Categories
+                    Padding(
+                      padding: EdgeInsets.only(
+                        left: SSizes.defaultSpace,
+                      ),
+                      child: Column(
+                        children: [
+                          SSectionHeading(
+                            title: 'Popular Categories',
+                            showActionButton: false,
+                            textColor: SColors.white,
+                          ),
+                          SizedBox(
+                            height: SSizes.spaceBtwItems,
+                          ),
+                          SHomeCategories(),
+                          SizedBox(
+                            height: SSizes.spaceBtwSections,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+        
+              ///Body
+              Padding(
+                padding: const EdgeInsets.all(SSizes.md),
+                child: Column(
+                  children: [
+                    const SPromoSlider(
+                      banners: [
+                        SImages.banner1,
+                        SImages.banner2,
+                        SImages.banner3,
                       ],
                     ),
-                  ),
-                ],
-              ),
-            ),
-
-            ///Body
-            Padding(
-              padding: const EdgeInsets.all(SSizes.md),
-              child: Column(
-                children: [
-                  const SPromoSlider(
-                    banners: [
-                      SImages.banner1,
-                      SImages.banner2,
-                      SImages.banner3,
-                    ],
-                  ),
-                  const SizedBox(
-                    height: SSizes.spaceBtwSections,
-                  ),
-                  SSectionHeading(
-                    title: 'Popular Products',
-                    showActionButton: true,
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const PopularProducts(),
-                        ),
-                      );
-                    },
-                  ),
-                  const SizedBox(
-                    height: SSizes.spaceBtwItems,
-                  ),
-                  SGridLayout(
-                    itemCount: 4,
-                    itemBuilder: (BuildContext context, int index) => GestureDetector(
-                      onTap: () {
-                        print("Navigating to ProductDetail");
+                    const SizedBox(
+                      height: SSizes.spaceBtwSections,
+                    ),
+                    SSectionHeading(
+                      title: 'Popular Products',
+                      showActionButton: true,
+                      onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => const ProductDetail()),
+                          MaterialPageRoute(
+                            builder: (context) => const PopularProducts(),
+                          ),
                         );
                       },
-                      child: SProductCardVertical(),
                     ),
-                  ),
-                ],
+                    const SizedBox(
+                      height: SSizes.spaceBtwItems,
+                    ),
+                    SGridLayout(
+                      itemCount: 4,
+                      itemBuilder: (BuildContext context, int index) => GestureDetector(
+                        onTap: () {
+                          print("Navigating to ProductDetail");
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) =>  ProductDetail(productId: "67361a5c08725fd38db61ecb",)),
+                          );
+                        },
+                        child: SProductCardVertical(),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
+        // bottomNavigationBar: NavigationMenu(),
       ),
-      // bottomNavigationBar: NavigationMenu(),
     );
   }
 }

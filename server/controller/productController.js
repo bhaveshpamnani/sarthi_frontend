@@ -3,14 +3,18 @@ const Product = require("../model/product");
 // Create Product
 exports.createProduct = async (req, res) => {
   try {
-    const { name, description, category, brand, price, stock, sku, images, sizes, colors, fabric, productReturnDay, isFeatured, isAvailable } = req.body;
+    const { name, description, category, brand, discountPrice,
+      mrpPrice,
+      discount, stock, sku, images, sizes, colors, fabric, productReturnDay, isFeatured, isAvailable } = req.body;
 
     const newProduct = new Product({
       name,
       description,
       category,
       brand,
-      price,
+      discountPrice,
+      mrpPrice,
+      discount,
       stock,
       sku,
       images,
