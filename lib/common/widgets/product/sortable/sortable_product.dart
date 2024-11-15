@@ -36,7 +36,7 @@ class SSortableProduct extends StatelessWidget {
         ),
         SGridLayout(
           itemCount: 8,
-          itemBuilder: (_, index) => const SProductCardVertical(),
+          itemBuilder: (_, index) => SProductCardVertical(),
         )
       ],
     );

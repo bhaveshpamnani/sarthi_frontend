@@ -9,11 +9,9 @@ import '../../../../common/widgets/layouts/grid_layout.dart';
 import '../common/widgets/custom_shapes/container/primary_header_container.dart';
 import '../common/widgets/product/product_card/product_card_vertical.dart';
 import '../common/widgets/text/section_heading.dart';
-import '../utils/constants/colors.dart';
 import '../utils/constants/image_strings.dart';
 import '../utils/constants/sizes.dart';
 import 'home_appbar.dart';
-import 'home_categories.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -48,30 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       text: 'Search in Store',
                     ),
                     SizedBox(
-                      height: SSizes.spaceBtwSections,
-                    ),
-        
-                    ///Categories
-                    Padding(
-                      padding: EdgeInsets.only(
-                        left: SSizes.defaultSpace,
-                      ),
-                      child: Column(
-                        children: [
-                          SSectionHeading(
-                            title: 'Popular Categories',
-                            showActionButton: false,
-                            textColor: SColors.white,
-                          ),
-                          SizedBox(
-                            height: SSizes.spaceBtwItems,
-                          ),
-                          SHomeCategories(),
-                          SizedBox(
-                            height: SSizes.spaceBtwSections,
-                          ),
-                        ],
-                      ),
+                      height: SSizes.spaceBtwSections*2,
                     ),
                   ],
                 ),
@@ -114,10 +89,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           print("Navigating to ProductDetail");
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) =>  ProductDetail(productId: "67361a5c08725fd38db61ecb",)),
+                            MaterialPageRoute(builder: (context) =>  ProductDetail(userId: "672f3987c7e2477ab91440b6",productId: "67361a5c08725fd38db61ecb",)),
                           );
                         },
-                        child: SProductCardVertical(),
+                        child: SProductCardVertical(brand: 'nike',title: "demo",discount: "25",images: [{"url":"assets/images/products/product-image-2.jpg"}],price: "599",),
                       ),
                     ),
                   ],

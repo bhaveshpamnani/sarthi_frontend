@@ -93,3 +93,20 @@ exports.deleteProduct = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+
+exports.uploadImage = async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+    if (!product) return res.status(404).send("Product not found");
+
+    const imagePath = `/uploads/${req.file.filename}`;
+
+    product.images.push({ url: imagePath, altText: req.body.altText || '' });
+    await product.save();
+
+    res.status(200).json({ message: "Image uploaded successfully", imagePath });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to upload image" });
+  }
+};

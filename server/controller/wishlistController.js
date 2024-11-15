@@ -52,3 +52,63 @@ exports.toggleProduct = async (req, res) => {
       .json({ message: "Error adding product to wishlist" });
   }
 };
+
+// Get the status of a product in the wishlist
+exports.getWishlistStatus = async (req, res) => {
+  try {
+    const { userId, productId } = req.params; // Get userId and productId from URL params
+
+    // Find the user's wishlist
+    const wishlist = await Wishlist.findOne({ user: userId });
+
+    if (!wishlist) {
+      return res.status(200).json({ isInWishlist: false }); // No wishlist, product is not in wishlist
+    }
+
+    // Check if the product is in the wishlist
+    const productInWishlist = wishlist.items.find(
+      (item) => item.product.toString() === productId
+    );
+
+    if (productInWishlist) {
+      return res.status(200).json({ isInWishlist: productInWishlist.isInWishlist });
+    }
+
+    return res.status(200).json({ isInWishlist: false }); // Product is not in the wishlist
+  } catch (error) {
+    console.error("Error fetching wishlist status:", error);
+    return res.status(500).json({ message: "Error fetching wishlist status" });
+  }
+};
+
+
+// Get User Wishlist
+exports.getProductsByUser =  async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    // Find the wishlist by userId and populate the product details
+    const wishlist = await Wishlist.findOne({ user: userId })
+      .populate('items.product', 'name discountPrice images brand')  // Populate only needed fields from the Product model
+      .exec();
+
+    if (!wishlist) {
+      return res.status(404).json({ message: 'Wishlist not found for this user' });
+    }
+
+    // Return the populated wishlist
+    res.status(200).json({
+      wishlist: wishlist.items.map(item => ({
+        productId: item.product._id,
+        name: item.product.name,
+        price: item.product.price,
+        image: item.product.image,
+        addedAt: item.addedAt,
+        isInWishlist: item.isInWishlist
+      }))
+    });
+  } catch (error) {
+    console.error('Error fetching wishlist:', error);
+    res.status(500).json({ message: 'An error occurred while fetching the wishlist' });
+  }
+};

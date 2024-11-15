@@ -33,6 +33,7 @@ app.use("/api/cart",cartRoutes);
 app.use("/api/order",orderRoutes);
 app.use("/api/payment",paymentRoutes);
 app.use("/api/categories", categoryRoutes); 
+app.use('/uploads', express.static('uploads'));
 
 // Start the server
 app.listen(PORT, () => {

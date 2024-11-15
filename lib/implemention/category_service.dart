@@ -5,7 +5,7 @@ import '../models/category.dart';
 import '../models/product.dart';
 
 class CategoryService {
-  static const String baseUrl = 'http://localhost:3000/api/getAll'; // Replace with your actual API URL
+  static const String baseUrl = 'http://localhost:3000/api'; // Replace with your actual API URL
 
   Future<List<Category>> fetchCategories() async {
     final response = await http.get(Uri.parse('$baseUrl/categories'));

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
 import '../../../../utils/constants/colors.dart';
-import '../../../../utils/constants/image_strings.dart';
 import '../../../../utils/constants/sizes.dart';
 import '../../../../utils/helpers/helper_functions.dart';
 import '../../../styles/shadow.dart';
@@ -14,11 +13,28 @@ import '../../text/product_price.dart';
 import '../../text/product_title_text.dart';
 
 class SProductCardVertical extends StatelessWidget {
-  const SProductCardVertical({super.key});
+  final List<Map<String, String>> images;
+  final String title;
+  final String brand;
+  final String price;
+  final String discount;
+
+  SProductCardVertical({
+    super.key,
+    required this.images,
+    required this.title,
+    required this.brand,
+    required this.price,
+    required this.discount,
+  });
 
   @override
   Widget build(BuildContext context) {
     final dark = SHelperFuctions.isDarkMode(context);
+    // Fetch the first image from the list
+    String? imageUrl = images.isNotEmpty ? images[0]['url']! : null; // Default to a placeholder image if no image
+
+
     return Container(
       padding: const EdgeInsets.all(1),
       decoration: BoxDecoration(
@@ -28,21 +44,21 @@ class SProductCardVertical extends StatelessWidget {
       ),
       child: Column(
         children: [
-          ///Thumbnail ,Wishlist button , discount tag
+          // Thumbnail, Wishlist button, Discount tag
           SRoundedContainer(
             height: 177,
             padding: const EdgeInsets.all(SSizes.md),
             backgroundColor: dark ? SColors.dark : SColors.light,
             child: Stack(
               children: [
-                ///--Thumbnail
-                const Center(
+                // Thumbnail
+                Center(
                   child: SRoundedImage(
-                    imageUrl: SImages.productImage3,
+                    imageUrl: imageUrl!, // Use the provided image URL
                   ),
                 ),
 
-                ///--sale tag , fav button
+                // Discount tag
                 Positioned(
                   top: 0,
                   child: SRoundedContainer(
@@ -51,7 +67,7 @@ class SProductCardVertical extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(
                         horizontal: SSizes.sm, vertical: SSizes.xs),
                     child: Text(
-                      '25%',
+                      '$discount%', // Display discount percentage
                       style: Theme.of(context)
                           .textTheme
                           .labelLarge!
@@ -59,7 +75,9 @@ class SProductCardVertical extends StatelessWidget {
                     ),
                   ),
                 ),
-                const Positioned(
+
+                // Wishlist button (Heart icon)
+                Positioned(
                   top: 0,
                   right: 0,
                   child: SCircularIcon(
@@ -72,35 +90,31 @@ class SProductCardVertical extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(
-            height: SSizes.spaceBtwItems / 2,
-          ),
+          const SizedBox(height: SSizes.spaceBtwItems / 2),
 
-          ///--details
-          const Column(
+          // Product details
+          Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SProductTitleText(
-                title: 'Women Dress yellow',
+                title: title, // Display product title
                 smallSize: true,
               ),
-              SizedBox(
-                height: SSizes.spaceBtwItems / 2,
-              ),
-              SBrandTitleTextWithVerifyIcon(title: 'nike'),
-              SizedBox(
-                height: SSizes.spaceBtwItems,
-              ),
+              const SizedBox(height: SSizes.spaceBtwItems / 2),
+              SBrandTitleTextWithVerifyIcon(title: brand), // Display product brand
+              const SizedBox(height: SSizes.spaceBtwItems),
             ],
           ),
           const Spacer(),
+
+          // Price and Add to Cart button
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Padding(
-                padding: EdgeInsets.only(left: SSizes.sm),
+              Padding(
+                padding: const EdgeInsets.only(left: SSizes.sm),
                 child: SProductPriceText(
-                  price: '675',
+                  price: price, // Display product price
                 ),
               ),
               Container(
@@ -108,8 +122,7 @@ class SProductCardVertical extends StatelessWidget {
                   color: SColors.primaryColor,
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(SSizes.cardRadiusMd - 5),
-                    bottomRight:
-                    Radius.circular(SSizes.productImageRadius - 5),
+                    bottomRight: Radius.circular(SSizes.productImageRadius - 5),
                   ),
                 ),
                 child: const SizedBox(

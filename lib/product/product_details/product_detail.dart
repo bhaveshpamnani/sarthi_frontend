@@ -12,18 +12,20 @@ import '../../common/widgets/custom_shapes/curved_edges/curved_edges_widget.dart
 import '../../common/widgets/icon/circular_icon.dart';
 import '../../common/widgets/text/brand_title_with_verify_icon.dart';
 import '../../common/widgets/text/product_price.dart';
-import '../../common/widgets/text/product_title_text.dart';
 import '../../common/widgets/text/section_heading.dart';
+import '../../implemention/wishlist_service.dart';
 import '../../utils/constants/colors.dart';
 import '../../utils/constants/enums.dart';
-import '../../utils/constants/image_strings.dart';
 import '../../utils/constants/sizes.dart';
 import '../../utils/helpers/helper_functions.dart';
 import '../product_review/product_review.dart';
 
 class ProductDetail extends StatefulWidget {
+  final String userId;
   final String productId;
-  ProductDetail({super.key, required this.productId});
+
+  ProductDetail({Key? key, required this.userId, required this.productId}) : super(key: key);
+
 
   @override
   State<ProductDetail> createState() => _ProductDetailState();
@@ -34,25 +36,64 @@ class _ProductDetailState extends State<ProductDetail> {
   final PageController _pageController = PageController();
   Map<String, dynamic>? product;
   List<String> _imageList = [];
-
+  List<String> sizes = [];
+  List<String> colors = [];
+  String? selectedSize;
+  String? selectedColor;
+  WishlistService wishlistService = WishlistService();
+  bool isInWishlist = false;
   @override
   void initState() {
     super.initState();
     _fetchProductDetails();
+    _getWishlistStatus();
   }
 
   _fetchProductDetails() async {
     try {
       product = await apiService.getProductById(widget.productId);
 
-
-      // Extract URLs if 'images' contains a list of maps with 'url' keys
-      _imageList = (product?['images'] as List<dynamic>)
-          .map((image) => image['url'] as String)
-          .toList();
-      setState(() {});
+      // Assuming each item in product['images'] has a 'url' key
+      if (product != null && product!['images'] != null) {
+        setState(() {
+          _imageList = product!['images']
+              .map<String>((image) => image['url'] as String)
+              .toList();// Extract URLs from each image object
+          sizes = List<String>.from(product!['sizes'] ?? []);
+          colors = List<String>.from(product!['colors'] ?? []);
+        });
+      } else {
+        setState(() {
+          _imageList = []; // default to an empty list if no images found
+        });
+      }
     } catch (e) {
       print('Error fetching product details: $e');
+    }
+  }
+
+  // Method to fetch the wishlist status
+  void _getWishlistStatus() async {
+    final result = await wishlistService.getWishlistStatus(widget.userId, widget.productId);
+    if (result["success"]) {
+      setState(() {
+        isInWishlist = result["isInWishlist"];
+        print("Initial isInWishlist status: $isInWishlist"); // Debug print
+      });
+    } else {
+      print("Error fetching wishlist status: ${result["message"]}");
+    }
+  }
+
+  Future<void> handleToggleWishlist() async {
+    final result = await wishlistService.toggleWishlist(widget.userId, widget.productId);
+    if (result["success"]) {
+      setState(() {
+        isInWishlist = result["isInWishlist"];
+        print("Toggled isInWishlist status: $isInWishlist"); // Debug print
+      });
+    } else {
+      print("Error toggling wishlist: ${result["message"]}");
     }
   }
 
@@ -170,18 +211,21 @@ class _ProductDetailState extends State<ProductDetail> {
                               ),
 
                               /// AppBar with action icons
-                              SAppBar(
-                                showBackArrow: true,
-                                actions: [
-                                  SCircularIcon(
-                                    width: 40,
-                                    height: 40,
-                                    icon: Iconsax.heart5,
-                                    color: Colors.red,
-                                  ),
-                                ],
-                              ),
-                            ],
+                    SAppBar(
+                      showBackArrow: true,
+                      actions: [
+                        SCircularIcon(
+                          width: 40,
+                          height: 40,
+                          icon: Iconsax.heart5,
+                          color: isInWishlist ? Colors.red : Colors.grey,
+                          onPressed: handleToggleWishlist,
+                        ),
+                      ],
+                    ),
+
+
+                    ],
                           ),
                         ),
                       ),
@@ -245,6 +289,15 @@ class _ProductDetailState extends State<ProductDetail> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                ///--title
+                                Text(
+                                  '${product!['name']}',
+                                  style: TextStyle(fontWeight: FontWeight.w500,fontSize: 20),
+                                ),
+
+                                SizedBox(
+                                  height: SSizes.spaceBtwItems / 1.5,
+                                ),
                                 ///Price & sale proce
                                 Row(
                                   children: [
@@ -252,7 +305,7 @@ class _ProductDetailState extends State<ProductDetail> {
                                     SRoundedContainer(
                                       radius: SSizes.sm,
                                       backgroundColor:
-                                          SColors.secondary.withOpacity(0.8),
+                                      SColors.secondary.withOpacity(0.8),
                                       padding: EdgeInsets.symmetric(
                                           horizontal: SSizes.sm,
                                           vertical: SSizes.xs),
@@ -271,13 +324,12 @@ class _ProductDetailState extends State<ProductDetail> {
                                     ///Price
                                     Text(
                                       '₹${product!['mrpPrice']}',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleSmall!
-                                          .apply(
-                                              decoration:
-                                                  TextDecoration.lineThrough),
+                                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                                        fontSize: 12, // Set the desired font size
+                                        decoration: TextDecoration.lineThrough,
+                                      ),
                                     ),
+
                                     SizedBox(
                                       width: SSizes.spaceBtwItems,
                                     ),
@@ -287,16 +339,58 @@ class _ProductDetailState extends State<ProductDetail> {
                                     ),
                                   ],
                                 ),
+                                SizedBox(
+                                  height: SSizes.spaceBtwItems / 1.5,
+                                ),
 
-                                ///--title
-                                SizedBox(
-                                  height: SSizes.spaceBtwItems / 1.5,
+
+                                ///Fabric and brand Section
+                                Row(
+                                  children: [
+                                    ///Fabric
+                                    Row(
+                                      children: [
+                                        Text(
+                                          'Fabric :',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .labelLarge,
+                                        ),
+                                        SizedBox(
+                                          width: SSizes.spaceBtwItems,
+                                        ),
+                                        Text(
+                                          '${product!['fabric']}',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium,
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      width: SSizes.spaceBtwSections,
+                                    ),
+
+                                    ///Brand
+                                    Row(
+                                      children: [
+                                        Text(
+                                          'Brand :',
+                                          style: Theme.of(context).textTheme.labelLarge,
+                                        ),
+                                        SizedBox(
+                                          width: SSizes.spaceBtwItems,
+                                        ),
+                                        SBrandTitleTextWithVerifyIcon(
+                                          title: '${product!['brand']}',
+                                          brandTextSize: TextSizes.medium,
+                                        ),
+                                      ],
+                                    ),
+                                  ],
                                 ),
-                                SProductTitleText(
-                                  title: '${product!['name']}',
-                                ),
                                 SizedBox(
-                                  height: SSizes.spaceBtwItems / 1.5,
+                                  height: SSizes.spaceBtwItems,
                                 ),
 
                                 ///--Stock Status
@@ -304,59 +398,20 @@ class _ProductDetailState extends State<ProductDetail> {
                                   children: [
                                     Text(
                                       'Stock :',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .labelLarge,
-                                    ),
-                                    SizedBox(
-                                      width: SSizes.spaceBtwItems,
-                                    ),
-                                    product!['stock'] > 0 ? Text(
-                                      'In Stock',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium,
-                                    ):Text(
-                                      'Out of  Stock',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium,
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: SSizes.spaceBtwItems,
-                                ),
-
-                                ///Fabric
-                                Row(
-                                  children: [
-                                    Text(
-                                      'Fabric :',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .labelLarge,
+                                      style: Theme.of(context).textTheme.labelLarge,
                                     ),
                                     SizedBox(
                                       width: SSizes.spaceBtwItems,
                                     ),
                                     Text(
-                                      '${product!['fabric']}',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium,
+                                      product!['stock'] > 0 ? 'In Stock' : 'Out of Stock',
+                                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                        color: product!['stock'] > 0 ? null : Colors.red,
+                                      ),
                                     ),
                                   ],
                                 ),
-                                SizedBox(
-                                  height: SSizes.spaceBtwItems,
-                                ),
 
-                                ///Brand
-                                SBrandTitleTextWithVerifyIcon(
-                                  title: '${product!['brand']}',
-                                  brandTextSize: TextSizes.medium,
-                                ),
                                 SizedBox(
                                   height: SSizes.spaceBtwItems,
                                 ),
@@ -366,44 +421,9 @@ class _ProductDetailState extends State<ProductDetail> {
 
                             ///--Attributes
                             Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                ///Attribute
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    SSectionHeading(
-                                      title: 'Colors',
-                                      showActionButton: false,
-                                    ),
-                                    SizedBox(
-                                      height: SSizes.spaceBtwItems / 2,
-                                    ),
-                                    Wrap(
-                                      children: [
-                                        SChoiceChip(
-                                          text: 'Green',
-                                          selected: true,
-                                          onSelected: (value) {},
-                                        ),
-                                        SChoiceChip(
-                                          text: 'Blue',
-                                          selected: false,
-                                          onSelected: (value) {},
-                                        ),
-                                        SChoiceChip(
-                                          text: 'Red',
-                                          selected: false,
-                                          onSelected: (value) {},
-                                        ),
-                                        SChoiceChip(
-                                          text: 'Yellow',
-                                          selected: false,
-                                          onSelected: (value) {},
-                                        ),
-                                      ],
-                                    )
-                                  ],
-                                ),
+                                /// Sizes Section
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -411,38 +431,51 @@ class _ProductDetailState extends State<ProductDetail> {
                                       title: 'Sizes',
                                       showActionButton: false,
                                     ),
-                                    SizedBox(
-                                      height: SSizes.spaceBtwItems / 2,
+                                    Wrap(
+                                      spacing: 8,
+                                      children: sizes.map((size) {
+                                        return SChoiceChip(
+                                          text: size,
+                                          selected: selectedSize == size,
+                                          onSelected: (isSelected) {
+                                            setState(() {
+                                              selectedSize = isSelected ? size : null;
+                                            });
+                                          },
+                                        );
+                                      }).toList(),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 16),
+
+                                /// Colors Section
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SSectionHeading(
+                                      title: 'Colors',
+                                      showActionButton: false,
                                     ),
                                     Wrap(
                                       spacing: 8,
-                                      children: [
-                                        SChoiceChip(
-                                          text: '28',
-                                          selected: true,
-                                          onSelected: (value) {},
-                                        ),
-                                        SChoiceChip(
-                                          text: '30',
-                                          selected: false,
-                                          onSelected: (value) {},
-                                        ),
-                                        SChoiceChip(
-                                          text: '32',
-                                          selected: false,
-                                          onSelected: (value) {},
-                                        ),
-                                        SChoiceChip(
-                                          text: '34',
-                                          selected: false,
-                                          onSelected: (value) {},
-                                        ),
-                                      ],
-                                    )
+                                      children: colors.map((color) {
+                                        return SChoiceChip(
+                                          text: color,
+                                          selected: selectedColor == color,
+                                          onSelected: (isSelected) {
+                                            setState(() {
+                                              selectedColor = isSelected ? color : null;
+                                            });
+                                          },
+                                        );
+                                      }).toList(),
+                                    ),
                                   ],
-                                )
+                                ),
                               ],
                             ),
+
                             SizedBox(
                               height: SSizes.spaceBtwSections,
                             ),
