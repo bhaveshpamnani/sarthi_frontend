@@ -32,7 +32,7 @@ class SCategoryTab extends StatelessWidget {
               ),
               SGridLayout(
                 itemCount: 4,
-                itemBuilder: (_, index) => const SProductCardVertical(),
+                itemBuilder: (_, index) => SProductCardVertical(),
               ),
               const SizedBox(
                 height: SSizes.spaceBtwSections,
