@@ -71,7 +71,7 @@ class WishlistService {
   Future<Map<String, dynamic>> getUserWishlist(String userId) async {
     try {
       final response = await http.get(
-        Uri.parse('$baseUrl/$userId'),
+        Uri.parse('$baseUrl/product-by-user/$userId'),
       );
 
       if (response.statusCode == 200) {

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:newsarthi/home/home.dart';
 import 'package:newsarthi/profile/setting.dart';
-import 'package:newsarthi/store/store.dart';
+import 'package:newsarthi/store/CategoryScreen.dart';
 import 'package:newsarthi/wishlist/wishlist.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -20,8 +20,8 @@ class _Navigation extends State<Navigation> {
 
   final List<Widget> _screens = [
     const HomeScreen(),
-    const Store(),
-    const WishList(),
+    const CategoryScreen(),
+    const WishList(userId: '672f3987c7e2477ab91440b6',),
     const SettingScreen(),
   ];
   @override
@@ -30,7 +30,7 @@ class _Navigation extends State<Navigation> {
       body: _screens[_selectedIndex],
       bottomNavigationBar: FlashyTabBar(
         animationCurve: Curves.linear,
-        animationDuration: Duration(milliseconds: 500),
+        animationDuration: Duration(milliseconds: 300),
         selectedIndex: _selectedIndex,
         iconSize: 23,
         showElevation: false, // use this to remove appBar's elevation

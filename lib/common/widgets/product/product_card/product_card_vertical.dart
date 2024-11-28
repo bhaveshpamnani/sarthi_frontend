@@ -3,7 +3,6 @@ import 'package:iconsax/iconsax.dart';
 
 import '../../../../utils/constants/colors.dart';
 import '../../../../utils/constants/sizes.dart';
-import '../../../../utils/helpers/helper_functions.dart';
 import '../../../styles/shadow.dart';
 import '../../custom_shapes/container/rounded_container.dart';
 import '../../icon/circular_icon.dart';
@@ -12,8 +11,8 @@ import '../../text/brand_title_with_verify_icon.dart';
 import '../../text/product_price.dart';
 import '../../text/product_title_text.dart';
 
-class SProductCardVertical extends StatelessWidget {
-  final List<Map<String, String>> images;
+class SProductCardVertical extends StatefulWidget {
+  final List<dynamic> images;
   final String title;
   final String brand;
   final String price;
@@ -29,84 +28,65 @@ class SProductCardVertical extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    final dark = SHelperFuctions.isDarkMode(context);
-    // Fetch the first image from the list
-    String? imageUrl = images.isNotEmpty ? images[0]['url']! : null; // Default to a placeholder image if no image
+  State<SProductCardVertical> createState() => _SProductCardVerticalState();
+}
 
+class _SProductCardVerticalState extends State<SProductCardVertical> {
+  @override
+  Widget build(BuildContext context) {
+    String? imageUrl = widget.images.isNotEmpty ? widget.images[0].toString() : null;
 
     return Container(
       padding: const EdgeInsets.all(1),
       decoration: BoxDecoration(
         boxShadow: [SShadowStyle.verticalProductShadow],
         borderRadius: BorderRadius.circular(SSizes.productImageRadius),
-        color: dark ? SColors.darkerGrey : SColors.white,
+        border: Border.all(color: SColors.grey)
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // Thumbnail, Wishlist button, Discount tag
-          SRoundedContainer(
-            height: 177,
-            padding: const EdgeInsets.all(SSizes.md),
-            backgroundColor: dark ? SColors.dark : SColors.light,
-            child: Stack(
+          Stack(
+            children: [
+              SRoundedImage(
+                imageUrl: imageUrl!,
+                isNetworkImage: true,
+                fit: BoxFit.fitHeight,
+              ),
+              Positioned(
+                top: 5,
+                left: 5,
+                child: SRoundedContainer(
+                  radius: SSizes.sm,
+                  backgroundColor: SColors.secondary.withOpacity(0.8),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: SSizes.sm, vertical: SSizes.xs),
+                  child: Text(
+                    '${widget.discount}%',
+                    style: Theme.of(context)
+                        .textTheme
+                        .labelLarge!
+                        .apply(color: SColors.black),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          // Product details
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Thumbnail
-                Center(
-                  child: SRoundedImage(
-                    imageUrl: imageUrl!, // Use the provided image URL
-                  ),
+                SProductTitleText(
+                  title: widget.title,
+                  smallSize: true,
                 ),
-
-                // Discount tag
-                Positioned(
-                  top: 0,
-                  child: SRoundedContainer(
-                    radius: SSizes.sm,
-                    backgroundColor: SColors.secondary.withOpacity(0.8),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: SSizes.sm, vertical: SSizes.xs),
-                    child: Text(
-                      '$discount%', // Display discount percentage
-                      style: Theme.of(context)
-                          .textTheme
-                          .labelLarge!
-                          .apply(color: SColors.black),
-                    ),
-                  ),
-                ),
-
-                // Wishlist button (Heart icon)
-                Positioned(
-                  top: 0,
-                  right: 0,
-                  child: SCircularIcon(
-                    width: 40,
-                    height: 40,
-                    icon: Iconsax.heart5,
-                    color: Colors.red,
-                  ),
-                ),
+                SBrandTitleTextWithVerifyIcon(title: widget.brand),
               ],
             ),
           ),
-          const SizedBox(height: SSizes.spaceBtwItems / 2),
-
-          // Product details
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SProductTitleText(
-                title: title, // Display product title
-                smallSize: true,
-              ),
-              const SizedBox(height: SSizes.spaceBtwItems / 2),
-              SBrandTitleTextWithVerifyIcon(title: brand), // Display product brand
-              const SizedBox(height: SSizes.spaceBtwItems),
-            ],
-          ),
-          const Spacer(),
-
+          SizedBox(height: 13,),
           // Price and Add to Cart button
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -114,10 +94,11 @@ class SProductCardVertical extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(left: SSizes.sm),
                 child: SProductPriceText(
-                  price: price, // Display product price
+                  price: widget.price,
                 ),
               ),
               Container(
+                padding: EdgeInsets.only(top: 2),
                 decoration: const BoxDecoration(
                   color: SColors.primaryColor,
                   borderRadius: BorderRadius.only(
@@ -135,9 +116,9 @@ class SProductCardVertical extends StatelessWidget {
                     ),
                   ),
                 ),
-              )
+              ),
             ],
-          )
+          ),
         ],
       ),
     );

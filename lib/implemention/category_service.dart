@@ -1,29 +1,28 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-import '../models/category.dart';
-import '../models/product.dart';
-
 class CategoryService {
-  static const String baseUrl = 'http://localhost:3000/api'; // Replace with your actual API URL
+  final String baseUrl = 'http://localhost:3000/api';
 
-  Future<List<Category>> fetchCategories() async {
-    final response = await http.get(Uri.parse('$baseUrl/categories'));
+  Future<List<dynamic>> fetchCategories() async {
+    final response = await http.get(Uri.parse('$baseUrl/categories/getAll'));
     if (response.statusCode == 200) {
-      List jsonResponse = json.decode(response.body)['categories'];
-      return jsonResponse.map((data) => Category.fromJson(data)).toList();
+      return jsonDecode(response.body)['categories'];
     } else {
       throw Exception('Failed to load categories');
     }
   }
 
-  Future<List<Product>> fetchProductsByCategory(String categoryId) async {
-    final response = await http.get(Uri.parse('$baseUrl/products/category/$categoryId'));
+  Future<List<dynamic>> fetchProductsByCategory(String categoryId) async {
+    final response = await http.get(Uri.parse('$baseUrl/products/categoryProduct/$categoryId'));
+
     if (response.statusCode == 200) {
-      List jsonResponse = json.decode(response.body)['products'];
-      return jsonResponse.map((data) => Product.fromJson(data)).toList();
+      final data = jsonDecode(response.body);
+      return data['products'];
+    } else if (response.statusCode == 404) {
+      return [];
     } else {
-      throw Exception('Failed to load products for category');
+      throw Exception('Failed to load products');
     }
   }
 }

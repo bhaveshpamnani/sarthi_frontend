@@ -1,15 +1,41 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:newsarthi/store/category_tab.dart';
-import '../common/widgets/appbar/tabbar.dart';
+
 import '../common/widgets/custom_shapes/container/search_container.dart';
 import '../common/widgets/product/cart/cart_menu_icon.dart';
+import '../implemention/category_service.dart';
 import '../utils/constants/colors.dart';
 import '../utils/constants/sizes.dart';
 import '../utils/helpers/helper_functions.dart';
+import 'category_tab.dart';
 
-class Store extends StatelessWidget {
-  const Store({super.key});
+class CategoryScreen extends StatefulWidget {
+  const CategoryScreen({super.key});
+
+  @override
+  State<CategoryScreen> createState() => _CategoryScreenState();
+}
+
+class _CategoryScreenState extends State<CategoryScreen> {
+  final CategoryService _categoryService = CategoryService();
+  List<dynamic> categories = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchCategories();
+  }
+
+  Future<void> fetchCategories() async {
+    try {
+      final fetchedCategories = await _categoryService.fetchCategories();
+      setState(() {
+        categories = fetchedCategories;
+      });
+      print(categories);
+    } catch (error) {
+      print("Error fetching categories: $error");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +45,7 @@ class Store extends StatelessWidget {
       color: Colors.black38,
       child: SafeArea(
         child: DefaultTabController(
-          length: 5,
+          length: categories.length,
           child: Scaffold(
             appBar: AppBar(
               automaticallyImplyLeading: false,
@@ -49,42 +75,25 @@ class Store extends StatelessWidget {
                     expandedHeight: 150,
                     flexibleSpace: Padding(
                       padding: const EdgeInsets.all(SSizes.defaultSpace),
-                      child: ListView(
-                        physics: const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        children: [
-                          const SSearchContainer(
-                            text: 'Search in Category',
-                            showBorder: true,
-                            shoeBackground: false,
-                            padding: EdgeInsets.zero,
-                          ),
-                          const SizedBox(
-                            height: SSizes.spaceBtwSections,
-                          ),
-                        ],
+                      child: const SSearchContainer(
+                        text: 'Search in Category',
+                        showBorder: true,
+                        shoeBackground: false,
+                        padding: EdgeInsets.zero,
                       ),
                     ),
-                    bottom: const STabBar(
-                      tabs: [
-                        Tab(child: Text('Sports')),
-                        Tab(child: Text('Furniture')),
-                        Tab(child: Text('Electronic')),
-                        Tab(child: Text('Cloths')),
-                        Tab(child: Text('Cosmetics')),
-                      ],
+                    bottom: TabBar(
+                      tabs: categories
+                          .map((category) => Tab(child: Text(category['name'])))
+                          .toList(),
                     ),
                   ),
                 ];
               },
-              body: const TabBarView(
-                children: [
-                  SCategoryTab(),
-                  SCategoryTab(),
-                  SCategoryTab(),
-                  SCategoryTab(),
-                  SCategoryTab(),
-                ],
+              body: TabBarView(
+                children: categories.map((category) {
+                  return SCategoryTab(categoryId: category['_id']);
+                }).toList(),
               ),
             ),
           ),

@@ -4,7 +4,6 @@ import 'package:http/http.dart' as http;
 class ProductService {
   final String baseUrl = 'http://localhost:3000/api'; // Replace with your backend URL
 
-
   //////====Admin side method ======/////
   // Create Product
   Future<Map<String, dynamic>> createProduct(Map<String, dynamic> productData) async {
@@ -70,7 +69,6 @@ class ProductService {
     }
   }
 
-
   ////=====admin side method =====/////
   // Delete Product
   Future<Map<String, dynamic>> deleteProduct(String productId) async {
@@ -80,6 +78,19 @@ class ProductService {
       return json.decode(response.body);
     } else {
       throw Exception('Failed to delete product');
+    }
+  }
+
+  ////=====Method for Popular Products=====////
+  // Get Popular Products
+  Future<List<dynamic>> getPopularProducts() async {
+    final response = await http.get(Uri.parse('$baseUrl/products/popular'));
+
+    if (response.statusCode == 200) {
+      print(response.body);
+      return json.decode(response.body)['data']; // Assuming API returns a "data" key for products
+    } else {
+      throw Exception('Failed to load popular products');
     }
   }
 }
